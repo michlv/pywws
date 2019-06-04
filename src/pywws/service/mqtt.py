@@ -77,6 +77,7 @@ requires an additional library. See :ref:`Dependencies - MQTT
             '#calc \\'rain_inch(rain_24hr(data))\\' \\'"rain_last_24hours_in": "%.2f",\\'#\\n'
             '#calc \\'rain_day(data)\\' \\'"rain_day_mm": "%.1f",\\'#\\n'
             '#calc \\'rain_inch(rain_day(data))\\' \\'"rain_day_in": "%.2f",\\'#\\n'
+            '#calc \\'str(fixed_block)\\'  \\'"fixed_block": %s,\\'#\\n'
             '#illuminance  \\'"illuminance_lux" : "%.1f",\\'#\\n'
             '#illuminance  \\'"illuminance_wm2" : "%.2f",\\' \\'\\' \\'illuminance_wm2(x)\\'#\\n'
             '#uv           \\'"uv"          : "%.d",\\'#\\n'
@@ -210,6 +211,7 @@ class ToService(pywws.service.LiveDataService):
 #calc 'rain_inch(rain_24hr(data))' '"rain_last_24hours_in": "%.2f",'#
 #calc 'rain_day(data)'             '"rain_day_mm": "%.1f",'#
 #calc 'rain_inch(rain_day(data))'  '"rain_day_in": "%.2f",'#
+#calc 'str(fixed_block)'           '"fixed_block": %s,'#
 """
     template_3080_add = """
 #illuminance  '"illuminance_lux" : "%.1f",'#
