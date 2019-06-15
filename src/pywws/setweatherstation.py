@@ -36,6 +36,7 @@ __usage__ = """
   -r n | --read_period n  set logging interval to n minutes
   -v   | --verbose        increase error message verbosity
   -z   | --zero_memory    clear the weather station logged reading count
+  -m   | --zero_minmax
 """
 __doc__ %= __usage__
 __usage__ = __doc__.split('\n')[0] + __usage__
@@ -61,9 +62,9 @@ def main(argv=None):
         argv = sys.argv
     try:
         opts, args = getopt.getopt(
-            argv[1:], "hcp:r:vz",
+            argv[1:], "hcp:r:vzm",
             ['help', 'clock', 'pressure=', 'read_period=',
-             'verbose', 'zero_memory'])
+             'verbose', 'zero_memory', 'zero_minmax'])
     except getopt.error as msg:
         print('Error: %s\n' % msg, file=sys.stderr)
         print(__usage__.strip(), file=sys.stderr)
@@ -74,6 +75,7 @@ def main(argv=None):
     read_period = None
     verbose = 0
     zero_memory = False
+    zero_minmax = False
     for o, a in opts:
         if o in ('-h', '--help'):
             print(__usage__.strip())
@@ -88,6 +90,8 @@ def main(argv=None):
             verbose += 1
         elif o in ('-z', '--zero_memory'):
             zero_memory = True
+        elif o in ('-m', '--zero_minmax'):
+            zero_minmax = True
     # check arguments
     if len(args) != 0:
         print("Error: No arguments required", file=sys.stderr)
@@ -100,17 +104,26 @@ def main(argv=None):
     data = []
     # set relative pressure
     if pressure:
+        print('Set rel pressure.')
         ptr = ws.fixed_format['rel_pressure'][0]
         data.append((ptr,   pressure % 256))
         data.append((ptr+1, pressure // 256))
     # set read period
     if read_period:
+        print('Set read period.')
         data.append((ws.fixed_format['read_period'][0], read_period))
     # reset data count
     if zero_memory:
+        print('Zero memory.')
         ptr = ws.fixed_format['data_count'][0]
         data.append((ptr,   1))
         data.append((ptr+1, 0))
+    if zero_minmax:
+        print('Zero min max.')
+        for ptr in range(0x6, 0x10):
+            data.append((ptr,   0))
+        for ptr in range(0x5d, 0x100):
+            data.append((ptr,   0))
     # set clock
     if clock:
         print("Clock setting is not known to work on any model of weather station.")
