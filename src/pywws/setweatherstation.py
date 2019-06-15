@@ -36,7 +36,7 @@ __usage__ = """
   -r n | --read_period n  set logging interval to n minutes
   -v   | --verbose        increase error message verbosity
   -z   | --zero_memory    clear the weather station logged reading count
-  -m   | --zero_minmax
+  -m   | --zero_minmax    clear min max values stored in weather station
 """
 __doc__ %= __usage__
 __usage__ = __doc__.split('\n')[0] + __usage__
